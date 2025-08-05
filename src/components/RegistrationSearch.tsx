@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Search, User, CheckCircle, XCircle, Calendar, Phone, UserCheck, Clock, AlertTriangle } from 'lucide-react';
+import { Search, User, CheckCircle, XCircle, Calendar, Phone, UserCheck, Clock, AlertTriangle, GraduationCap } from 'lucide-react';
 import { RegisteredStudent } from '../types';
 import { supabase } from '../utils/supabase';
 
@@ -22,7 +22,7 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
     try {
       const { data, error } = await supabase
         .from('registered_students')
-        .select('*')
+        .select('id, name, category, teacher, created_at')
         .order('name');
 
       if (error) {
@@ -194,6 +194,18 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
                             </div>
                             
                             <div className="flex items-center gap-3">
+                              <GraduationCap className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                              <div>
+                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>المحفظ</p>
+                                <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
+                                  {searchResult.teacher || 'غير محدد'}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                          
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
                               <Calendar className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
                               <div>
                                 <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>الفئة</p>
@@ -202,30 +214,16 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
                                 </p>
                               </div>
                             </div>
-                          </div>
-                          
-                          <div className="space-y-4">
+                            
                             <div className="flex items-center gap-3">
                               <Clock className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
                               <div>
                                 <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>تاريخ التسجيل</p>
                                 <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                  {formatDate(searchResult.registration_date)}
+                                  {formatDate(searchResult.created_at)}
                                 </p>
                               </div>
                             </div>
-                            
-                            {searchResult.guardian_name && (
-                              <div className="flex items-center gap-3">
-                                <UserCheck className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                                <div>
-                                  <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>ولي الأمر</p>
-                                  <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                    {searchResult.guardian_name}
-                                  </p>
-                                </div>
-                              </div>
-                            )}
                           </div>
                         </div>
                       </div>
