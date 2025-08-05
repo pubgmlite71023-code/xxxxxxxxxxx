@@ -22,7 +22,7 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
     try {
       const { data, error } = await supabase
         .from('registered_students')
-        .select('id, name, category, teacher, created_at')
+        .select('id, name, category, teacher')
         .order('name');
 
       if (error) {
@@ -64,14 +64,6 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
     if (e.key === 'Enter') {
       handleSearch();
     }
-  };
-
-  const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('ar-EG', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
-    });
   };
 
   return (
@@ -204,25 +196,13 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
                             </div>
                           </div>
                           
-                          <div className="space-y-4">
-                            <div className="flex items-center gap-3">
-                              <Calendar className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                              <div>
-                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>الفئة</p>
-                                <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                  {searchResult.category}
-                                </p>
-                              </div>
-                            </div>
-                            
-                            <div className="flex items-center gap-3">
-                              <Clock className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
-                              <div>
-                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>تاريخ التسجيل</p>
-                                <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                  {formatDate(searchResult.created_at)}
-                                </p>
-                              </div>
+                          <div className="flex items-center gap-3">
+                            <Calendar className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                            <div>
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>الفئة</p>
+                              <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
+                                {searchResult.category}
+                              </p>
                             </div>
                           </div>
                         </div>

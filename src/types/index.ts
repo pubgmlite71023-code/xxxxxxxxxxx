@@ -18,5 +18,4 @@ export interface RegisteredStudent {
   name: string;
   category: string;
   teacher: string;
-  created_at: string;
 }
