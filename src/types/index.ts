@@ -19,3 +19,11 @@ export interface RegisteredStudent {
   category: string;
   teacher: string;
 }
+
+export interface Reciter {
+  id: string;
+  name: string;
+  category: string;
+  teacher: string;
+  created_at: string;
+}

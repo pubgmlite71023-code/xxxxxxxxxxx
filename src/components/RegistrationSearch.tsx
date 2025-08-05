@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Search, User, CheckCircle, XCircle, Calendar, Phone, UserCheck, Clock, AlertTriangle, GraduationCap } from 'lucide-react';
-import { RegisteredStudent } from '../types';
+import { Reciter } from '../types';
 import { supabase } from '../utils/supabase';
 
 interface RegistrationSearchProps {
@@ -9,28 +9,28 @@ interface RegistrationSearchProps {
 
 export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMode = false }) => {
   const [searchTerm, setSearchTerm] = useState('');
-  const [searchResult, setSearchResult] = useState<RegisteredStudent | null>(null);
+  const [searchResult, setSearchResult] = useState<Reciter | null>(null);
   const [searchAttempted, setSearchAttempted] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [registeredStudents, setRegisteredStudents] = useState<RegisteredStudent[]>([]);
+  const [reciters, setReciters] = useState<Reciter[]>([]);
 
   useEffect(() => {
-    fetchRegisteredStudents();
+    fetchReciters();
   }, []);
 
-  const fetchRegisteredStudents = async () => {
+  const fetchReciters = async () => {
     try {
       const { data, error } = await supabase
-        .from('registered_students')
-        .select('id, name, category, teacher')
+        .from('reciters')
+        .select('id, name, category, teacher, created_at')
         .order('name');
 
       if (error) {
-        console.error('Error fetching registered students:', error);
+        console.error('Error fetching reciters:', error);
         return;
       }
 
-      setRegisteredStudents(data || []);
+      setReciters(data || []);
     } catch (error) {
       console.error('Error:', error);
     }
@@ -47,11 +47,11 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
     setSearchAttempted(true);
 
     try {
-      const student = registeredStudents.find(s => 
-        s.name.toLowerCase().includes(searchTerm.toLowerCase().trim())
+      const reciter = reciters.find(r => 
+        r.name.toLowerCase().includes(searchTerm.toLowerCase().trim())
       );
 
-      setSearchResult(student || null);
+      setSearchResult(reciter || null);
     } catch (error) {
       console.error('Search error:', error);
       setSearchResult(null);
@@ -64,6 +64,16 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
     if (e.key === 'Enter') {
       handleSearch();
     }
+  };
+
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleDateString('ar-EG', {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      weekday: 'long'
+    });
   };
 
   return (
@@ -196,12 +206,36 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
                             </div>
                           </div>
                           
+                          <div className="space-y-4">
+                            <div className="flex items-center gap-3">
+                              <Calendar className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                              <div>
+                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>الفئة</p>
+                                <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
+                                  {searchResult.category}
+                                </p>
+                              </div>
+                            </div>
+                            
+                            <div className="flex items-center gap-3">
+                              <Clock className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
+                              <div>
+                                <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>تاريخ التسجيل</p>
+                                <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
+                                  {formatDate(searchResult.created_at)}
+                                </p>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                        
+                        <div className="md:col-span-2 mt-4">
                           <div className="flex items-center gap-3">
                             <Calendar className={`w-6 h-6 ${isDarkMode ? 'text-green-400' : 'text-green-600'}`} />
                             <div>
-                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>الفئة</p>
+                              <p className={`text-sm ${isDarkMode ? 'text-gray-400' : 'text-gray-600'}`}>ملاحظة</p>
                               <p className={`text-lg font-semibold ${isDarkMode ? 'text-green-200' : 'text-green-700'}`}>
-                                {searchResult.category}
+                                تم تسجيلك بنجاح في المسابقة
                               </p>
                             </div>
                           </div>
@@ -302,7 +336,7 @@ export const RegistrationSearch: React.FC<RegistrationSearchProps> = ({ isDarkMo
               </h3>
             </div>
             <p className={`text-lg ${isDarkMode ? 'text-purple-300' : 'text-purple-700'}`}>
-              إجمالي الطلاب المسجلين: <span className="font-bold text-2xl">{registeredStudents.length}</span> طالب
+              إجمالي القراء المسجلين: <span className="font-bold text-2xl">{reciters.length}</span> قارئ
             </p>
           </div>
         </div>
